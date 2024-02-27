@@ -261,9 +261,10 @@ def start_microservice(port):
     server_socket.listen(1)                # Wait for connection
     print("Microservice started on port:", port)
 
+    main_socket, addr = server_socket.accept()
     # Main server loop DRAFT
     while True:
-        main_socket, addr = server_socket.accept()
+        
         msg = main_socket.recv(1024).decode()
         print("Message:", msg)
         if msg == "give": # GET RANDOM MUSHROOM ATTRIBUTES AND SEND
@@ -276,7 +277,7 @@ def start_microservice(port):
             break
         else:
             print("Invalid message.")
-        main_socket.close()
+    main_socket.close()
     print("Microservice stopped.")
 
 def main():
