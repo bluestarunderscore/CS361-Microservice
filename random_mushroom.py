@@ -259,18 +259,25 @@ def start_microservice(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(("127.0.0.1",port)) # Host on LOCALHOST
     server_socket.listen(1)                # Wait for connection
+    print("Microservice started on port:", port)
 
     # Main server loop DRAFT
     while True:
         main_socket, addr = server_socket.accept()
         msg = main_socket.recv(1024).decode()
+        print("Message:", msg)
         if msg == "give": # GET RANDOM MUSHROOM ATTRIBUTES AND SEND
             attr = get_random_stats(0) # Set to 1 to enable debug printing.
             pickled_data = pickle.dumps(attr)
             main_socket.sendall(pickled_data)
+        elif msg == "close":
+            print("Closing connection and stopping microservice")
+            main_socket.close()
+            break
         else:
             print("Invalid message.")
         main_socket.close()
+    print("Microservice stopped.")
 
 def main():
     start_microservice(1100)
