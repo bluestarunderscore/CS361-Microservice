@@ -16,7 +16,7 @@ import pandas as pd
 ###############################################################
 def get_random_stats(debug_prints):
     
-    #The list of valid fields.
+    #The list of fields and valid values.
     fields = {
         'cap-shape': {
             'bell': 0,
@@ -260,14 +260,15 @@ def start_microservice(port):
     server_socket.bind(("127.0.0.1",port)) # Host on LOCALHOST
     server_socket.listen(1)                # Wait for connection
     print("Microservice started on port:", port)
-
     main_socket, addr = server_socket.accept()
-    # Main server loop DRAFT
+    
+    # Main server loop
+    # Valid commands: give, close
     while True:
         
         msg = main_socket.recv(1024).decode()
         print("Message:", msg)
-        if msg == "give": # GET RANDOM MUSHROOM ATTRIBUTES AND SEND
+        if msg == "give": # Generate random mushroom attributes and send DataFrame
             attr = get_random_stats(0) # Set to 1 to enable debug printing.
             pickled_data = pickle.dumps(attr)
             main_socket.sendall(pickled_data)
